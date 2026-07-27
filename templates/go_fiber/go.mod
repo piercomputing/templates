@@ -1,4 +1,4 @@
-module {{.AppSlug}}
+module go-fiber
 
 go 1.24
 

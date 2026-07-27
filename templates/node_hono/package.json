@@ -1,5 +1,5 @@
 {
-  "name": "{{.AppSlug}}",
+  "name": "node-hono",
   "type": "module",
   "scripts": {
     "start": "node index.js",

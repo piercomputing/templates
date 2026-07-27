@@ -1,4 +1,4 @@
-# Dependabot version updates — low-touch profile.
+# Dependabot version updates — low-touch profile. (rev 2: real manifests)
 #
 # One grouped PR per ecosystem per month (groups cannot span ecosystems, so
 # five quiet monthly PRs is the floor for this monorepo: npm, gomod, cargo,
