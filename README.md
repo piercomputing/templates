@@ -25,8 +25,9 @@ scripts/            render-neutral.sh — renders .tmpl with neutral values
 3. Pier vendors this repo back into its monorepo (`make templates-vendor`)
    so the CLI's embedded scaffolds stay in step.
 
-Dependency updates are automated via Renovate; every bump runs the full
-template CI before merge.
+Dependency updates are automated via Dependabot (grouped monthly PRs per
+ecosystem, with release cooldowns); every bump runs the full template CI
+before merge.
 
 ## License
 

@@ -1,0 +1,76 @@
+# Dependabot version updates — low-touch profile.
+#
+# One grouped PR per ecosystem per month (groups cannot span ecosystems, so
+# five quiet monthly PRs is the floor for this monorepo: npm, gomod, cargo,
+# pip, docker). Template CI gates every PR. Cooldowns keep day-old releases
+# (and their supply-chain surprises) out of the templates; security updates
+# are separate, always-on, and immediate (enabled in repo settings, not
+# here — they ignore this schedule by design).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directories:
+      - /templates/node_hono
+      - /templates/site_nextjs
+      - /templates/site_astro
+      - /templates/site_vite
+    schedule:
+      interval: monthly
+    labels: [dependencies]
+    groups:
+      npm:
+        patterns: ["*"]
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 14
+      semver-patch-days: 7
+
+  - package-ecosystem: gomod
+    directory: /templates/go_fiber
+    schedule:
+      interval: monthly
+    labels: [dependencies]
+    groups:
+      gomod:
+        patterns: ["*"]
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 14
+      semver-patch-days: 7
+
+  - package-ecosystem: cargo
+    directory: /templates/rust_axum
+    schedule:
+      interval: monthly
+    labels: [dependencies]
+    groups:
+      cargo:
+        patterns: ["*"]
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 14
+      semver-patch-days: 7
+
+  - package-ecosystem: pip
+    directory: /templates/python_fastapi
+    schedule:
+      interval: monthly
+    labels: [dependencies]
+    groups:
+      pip:
+        patterns: ["*"]
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 14
+      semver-patch-days: 7
+
+  - package-ecosystem: docker
+    directory: /templates/dockerfile_caddy
+    schedule:
+      interval: monthly
+    labels: [dependencies]
+    groups:
+      docker:
+        patterns: ["*"]
+    cooldown:
+      default-days: 14
