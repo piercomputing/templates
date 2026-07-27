@@ -1,0 +1,7 @@
+{{ define "main" }}
+<h1>{{ .Site.Title }}</h1>
+<p>A Hugo site deployed with <code>pier sites deploy</code>.</p>
+{{ range .Site.RegularPages }}
+<p><a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
+{{ end }}
+{{ end }}

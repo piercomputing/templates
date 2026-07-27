@@ -1,0 +1,49 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommitsDisabled"],
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "description": "Group per template directory so one PR = one template's bumps",
+      "matchFileNames": ["templates/node_hono/**"],
+      "groupName": "node_hono deps"
+    },
+    {
+      "matchFileNames": ["templates/python_fastapi/**"],
+      "groupName": "python_fastapi deps"
+    },
+    {
+      "matchFileNames": ["templates/go_fiber/**"],
+      "groupName": "go_fiber deps"
+    },
+    {
+      "matchFileNames": ["templates/rust_axum/**"],
+      "groupName": "rust_axum deps"
+    },
+    {
+      "matchFileNames": ["templates/dockerfile_caddy/**"],
+      "groupName": "dockerfile_caddy deps"
+    },
+    {
+      "matchFileNames": ["templates/site_nextjs/**"],
+      "groupName": "site_nextjs deps"
+    },
+    {
+      "matchFileNames": ["templates/site_astro/**"],
+      "groupName": "site_astro deps"
+    },
+    {
+      "matchFileNames": ["templates/site_vite/**"],
+      "groupName": "site_vite deps"
+    },
+    {
+      "matchFileNames": ["templates/site_hugo/**"],
+      "groupName": "site_hugo deps"
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"]
+  }
+}

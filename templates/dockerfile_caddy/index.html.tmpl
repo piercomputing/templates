@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.AppName}}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex; align-items: center; justify-content: center;
+            min-height: 100vh; background: #0a0a0a; color: #fafafa;
+        }
+        .container { text-align: center; }
+        h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        p { color: #888; font-size: 1.1rem; }
+        .badge {
+            display: inline-block; margin-top: 1.5rem;
+            padding: 0.4rem 1rem; border-radius: 999px;
+            background: #1a1a2e; color: #6c6cff; font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{.AppName}}</h1>
+        <p>Deployed on Pier</p>
+        <span class="badge">{{.AppSlug}} &middot; ready</span>
+    </div>
+</body>
+</html>

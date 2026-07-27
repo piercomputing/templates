@@ -1,0 +1,75 @@
+name: sync
+
+# Publishes each template — rendered with neutral values — to its public
+# piercomputing/pier-template-<id> repository, and marks that repo as a
+# GitHub template repository (idempotent). The per-template repos are what
+# the Pier platform clones for instant template deploys and what users
+# generate/clone from; they are build artifacts of THIS repo and receive a
+# single fresh commit per sync whose message pins the monorepo SHA.
+#
+# Requires the SYNC_TOKEN secret: a fine-grained PAT with Contents:write +
+# Administration:write on the pier-template-* repositories (they must be
+# created once, empty, before the first sync).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: template-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        template:
+          - node_hono
+          - python_fastapi
+          - go_fiber
+          - rust_axum
+          - dockerfile_caddy
+          - site_nextjs
+          - site_astro
+          - site_vite
+          - site_hugo
+          - site_html
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Render with neutral values
+        run: ./scripts/render-neutral.sh "templates/${{ matrix.template }}" /tmp/rendered
+
+      - name: Include LICENSE
+        run: cp LICENSE /tmp/rendered/LICENSE
+
+      - name: Push to pier-template-${{ matrix.template }}
+        env:
+          SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
+        working-directory: /tmp/rendered
+        run: |
+          repo="piercomputing/pier-template-${{ matrix.template }}"
+          git init -b main -q
+          # All public commits come from the piercomputing account.
+          git config user.name "piercomputing"
+          git config user.email "tech@pier.run"
+          git add -A
+          git commit -q -m "sync: templates@${{ github.sha }}"
+          git push --force "https://x-access-token:${SYNC_TOKEN}@github.com/${repo}.git" main
+
+      - name: Enforce repository settings
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
+        # Template flag ON (the generate API / "Use this template" need it);
+        # issues/wiki/projects OFF — the repo is a force-pushed build
+        # artifact, contributions go to the monorepo.
+        run: |
+          gh api -X PATCH "repos/piercomputing/pier-template-${{ matrix.template }}" \
+            -F is_template=true -F has_issues=false -F has_wiki=false -F has_projects=false \
+            -f homepage="https://pier.run" \
+            -f description="Pier starter template: ${{ matrix.template }}. Deploy instantly at pier.run — or use this template to make it yours. Source of truth: piercomputing/templates." \
+            > /dev/null

@@ -1,0 +1,86 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        template:
+          - node_hono
+          - python_fastapi
+          - go_fiber
+          - rust_axum
+          - dockerfile_caddy
+          - site_nextjs
+          - site_astro
+          - site_vite
+          - site_hugo
+          - site_html
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Render with neutral values
+        run: ./scripts/render-neutral.sh "templates/${{ matrix.template }}" /tmp/rendered
+
+      - uses: actions/setup-node@v4
+        if: contains(fromJSON('["node_hono","site_nextjs","site_astro","site_vite"]'), matrix.template)
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        if: matrix.template == 'python_fastapi'
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-go@v5
+        if: matrix.template == 'go_fiber'
+        with:
+          go-version: "1.24"
+
+      - uses: dtolnay/rust-toolchain@stable
+        if: matrix.template == 'rust_axum'
+
+      - uses: peaceiris/actions-hugo@v3
+        if: matrix.template == 'site_hugo'
+        with:
+          hugo-version: "latest"
+          extended: true
+
+      - name: Build smoke
+        working-directory: /tmp/rendered
+        run: |
+          case "${{ matrix.template }}" in
+            node_hono)
+              npm install
+              node --check index.js
+              ;;
+            python_fastapi)
+              pip install -r requirements.txt
+              python -m py_compile main.py
+              ;;
+            go_fiber)
+              go build ./...
+              ;;
+            rust_axum)
+              cargo check
+              ;;
+            dockerfile_caddy)
+              docker build -t smoke .
+              ;;
+            site_nextjs|site_astro|site_vite)
+              npm install
+              npm run build
+              ;;
+            site_hugo)
+              hugo --minify
+              ;;
+            site_html)
+              test -f index.html
+              ;;
+          esac
