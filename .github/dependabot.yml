@@ -18,11 +18,13 @@ updates:
       interval: monthly
     labels: [dependencies]
     ignore:
-      # TS 7 (the native compiler) isn't drivable by Next 16's build —
-      # one blocked member fails the whole npm group PR. Revisit when
-      # Next supports it.
+      # TS >=6 (7 is the native compiler) isn't drivable by Next 16's
+      # build — one blocked member fails the whole npm group PR. Matched
+      # by VERSION RANGE, not update-types: without lockfiles these are
+      # requirement updates, where update-type classification doesn't
+      # reliably match. Revisit when Next supports it.
       - dependency-name: typescript
-        update-types: ["version-update:semver-major"]
+        versions: [">=6"]
     groups:
       npm:
         patterns: ["*"]
